@@ -1,6 +1,6 @@
 import { startPolling } from "@big-whale-labs/botcaster";
 import { FarcasterClient } from ".";
-import { CastWithInteractions } from "@neynar/nodejs-sdk/build/neynar-api/v2";
+import { CastNotificationType, CastWithInteractions } from "@neynar/nodejs-sdk/build/neynar-api/v2";
 import { Level } from "level"
 import { db } from "../utils";
 import path from "path";
@@ -36,12 +36,16 @@ export class StarkBot {
         else {
             console.log("the notification hasn't been handled yet");
 
-            // TODO:
-            // 1. Filter if transcation is a mention!
-            // 2. Reply with the frame!
+            if(notification.type) {
+                if(notification.type === CastNotificationType.Mention) {
+                    console.log("this is a mention");
 
+                    this.farcasterClient.publishFrame("https://fc-polls.vercel.app/polls/0dc157e8-9258-4ead-91d2-fe0eb4059190", notificationHash);
+                }
+            }
 
             // TODO: Here we should set the notification as handled
+            this.levelsDB.put(notificationHash, "handled");
         }
     }
 

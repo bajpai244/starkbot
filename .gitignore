@@ -170,3 +170,6 @@ dist
 
 # level db
 db
+
+# node-persist
+.node-persist

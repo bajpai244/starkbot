@@ -9,9 +9,33 @@ export class FarcasterClient {
         this.signerUUID = SIGNER_UUID;
     }
 
-    async publishCast(msg: string) {
+    async publishCast(msg: string, replyTo: string) {
         try {
-            const response = await this.client.publishCast(this.signerUUID, msg);
+            const response = await this.client.publishCast(this.signerUUID, msg, { replyTo });
+            console.log("Published cast: ", response);
+        }
+        catch (err) {
+            // todo: remove
+            console.log("error:")
+
+            // Error handling, checking if it's an API response error.
+            if (isApiErrorResponse(err)) {
+                // todo: remove
+                console.log(err.response.data);
+            } else {
+                // todo: remove
+                console.log(err);
+            }
+        }
+    }
+
+    async publishFrame(frame_url: string, replyTo: string) {
+        try {
+            const response = await this.client.publishCast(this.signerUUID, '', { embeds: [{
+                url: frame_url
+            }],replyTo });
+
+            // TODO: remove
             console.log("Published cast: ", response);
         }
         catch (err) {
