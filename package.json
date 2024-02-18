@@ -5,7 +5,21 @@
   "devDependencies": {
     "bun-types": "latest"
   },
+  "scripts": {
+    "start": "bun run src/main.ts",
+    "dev": "bun run --watch src/main.ts"
+  },
   "peerDependencies": {
     "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@big-whale-labs/botcaster": "^0.0.28",
+    "@neynar/nodejs-sdk": "^1.9.6",
+    "@types/express": "^4.17.21",
+    "@types/level": "^6.0.3",
+    "@types/node": "^20.11.19",
+    "dotenv": "^16.4.4",
+    "express": "^4.18.2",
+    "level": "^8.0.1"
   }
 }
