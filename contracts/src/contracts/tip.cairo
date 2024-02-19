@@ -1,5 +1,6 @@
 use starknet::ContractAddress;
 
+
 #[starknet::interface]
 trait ITip<TContractState> {
     fn deposit(ref self: TContractState, fid: felt252, amount: u256);
@@ -18,6 +19,11 @@ mod Tip {
     use core::traits::TryInto;
     use starknet::{ContractAddress, get_tx_info, get_caller_address, get_contract_address};
     use tipping::interfaces::erc20::{IERC20Dispatcher, IERC20DispatcherTrait};
+
+    const USDC_ADDRESS: felt252 =
+        0x053c91253bc9682c04929ca02ed00b3e423f6710d2ee7e0d5ebb06f3ecf368a8;
+    // USDC has 6 decimals
+    const MAX_ALLOWED_BALANCE: u256 = 501_000000;
 
     #[storage]
     struct Storage {
@@ -66,22 +72,18 @@ mod Tip {
     #[abi(embed_v0)]
     impl TipImpl of super::ITip<ContractState> {
         fn deposit(ref self: ContractState, fid: felt252, amount: u256) {
-
             let previous_balance = self.balance.read(fid);
             let new_balance = previous_balance + amount;
             // usdc has 6 decimals
-            assert(new_balance < 501_000000, 'max allowed balance is 500 USDC');
+            assert(new_balance < MAX_ALLOWED_BALANCE, 'max allowed balance is 500 USDC');
 
             let contract_address = get_contract_address();
 
             let caller_address = get_caller_address();
-            // TODO: change this address to USDC
-            let eth_address: ContractAddress =
-                0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7
-                .try_into()
-                .unwrap();
 
-            IERC20Dispatcher { contract_address: eth_address }
+            let usdc_address: ContractAddress = USDC_ADDRESS.try_into().unwrap();
+
+            IERC20Dispatcher { contract_address: usdc_address }
                 .transfer_from(caller_address, contract_address, amount);
 
             self.balance.write(fid, new_balance);
@@ -107,14 +109,11 @@ mod Tip {
             let caller_address = get_caller_address();
             assert(caller_address == self.owner.read(), 'Only owner can withdraw');
 
-            let eth_address: ContractAddress =
-                0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7
-                .try_into()
-                .unwrap();
+            let usdc_address: ContractAddress = USDC_ADDRESS.try_into().unwrap();
 
             let amount = self.balance.read(fid);
 
-            IERC20Dispatcher { contract_address: eth_address }.transfer(address, amount);
+            IERC20Dispatcher { contract_address: usdc_address }.transfer(address, amount);
 
             self.balance.write(fid, 0);
 
