@@ -1,4 +1,4 @@
-use starknet::ContractAddress;
+use starknet::{ContractAddress, ClassHash};
 
 
 #[starknet::interface]
@@ -9,15 +9,20 @@ trait ITip<TContractState> {
     fn get_balance(self: @TContractState, fid: felt252) -> u256;
     fn get_owner(self: @TContractState) -> ContractAddress;
     fn set_owner(ref self: TContractState, new_owner: ContractAddress);
+    fn upgrade_contract(ref self: TContractState, new_class_hash: ClassHash);
 }
 
 #[starknet::contract]
 mod Tip {
+    use core::result::ResultTrait;
     use core::starknet::event::EventEmitter;
     use core::box::BoxTrait;
     use core::option::OptionTrait;
     use core::traits::TryInto;
-    use starknet::{ContractAddress, get_tx_info, get_caller_address, get_contract_address};
+    use starknet::{
+        ContractAddress, ClassHash, get_tx_info, get_caller_address, get_contract_address,
+        replace_class_syscall
+    };
     use tipping::interfaces::erc20::{IERC20Dispatcher, IERC20DispatcherTrait};
 
     const USDC_ADDRESS: felt252 =
@@ -37,7 +42,8 @@ mod Tip {
         Deposit: Deposit,
         Tip: Tip,
         Withdraw: Withdraw,
-        SetOwner: SetOwner
+        SetOwner: SetOwner,
+        ContractUpgraded: ContractUpgraded
     }
 
     #[derive(Drop, starknet::Event)]
@@ -62,6 +68,11 @@ mod Tip {
     #[derive(Drop, starknet::Event)]
     struct SetOwner {
         new_owner: ContractAddress
+    }
+
+    #[derive(Drop, starknet::Event)]
+    struct ContractUpgraded {
+        new_class_hash: ClassHash
     }
 
     #[constructor]
@@ -134,6 +145,15 @@ mod Tip {
             self.owner.write(new_owner);
 
             self.emit(SetOwner { new_owner });
+        }
+
+        fn upgrade_contract(ref self: ContractState, new_class_hash: ClassHash) {
+            let caller_address = get_caller_address();
+            assert(caller_address == self.owner.read(), 'Only owner can upgrade contract');
+
+            replace_class_syscall(new_class_hash).unwrap();
+
+            self.emit(ContractUpgraded { new_class_hash });
         }
     }
 }
