@@ -66,11 +66,16 @@ mod Tip {
     #[abi(embed_v0)]
     impl TipImpl of super::ITip<ContractState> {
         fn deposit(ref self: ContractState, fid: felt252, amount: u256) {
-            assert(amount < 501, 'amount must be <= 500');
+
+            let previous_balance = self.balance.read(fid);
+            let new_balance = previous_balance + amount;
+            // usdc has 6 decimals
+            assert(new_balance < 501_000000, 'max allowed balance is 500 USDC');
 
             let contract_address = get_contract_address();
 
             let caller_address = get_caller_address();
+            // TODO: change this address to USDC
             let eth_address: ContractAddress =
                 0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7
                 .try_into()
@@ -79,8 +84,7 @@ mod Tip {
             IERC20Dispatcher { contract_address: eth_address }
                 .transfer_from(caller_address, contract_address, amount);
 
-            let previous_balance = self.balance.read(fid);
-            self.balance.write(fid, previous_balance + amount);
+            self.balance.write(fid, new_balance);
 
             self.emit(Deposit { fid, amount });
         }
