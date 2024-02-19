@@ -1,5 +1,0 @@
-target
-build
-node_modules
-.env
-.env.local
