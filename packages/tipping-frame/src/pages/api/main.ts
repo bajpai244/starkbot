@@ -1,6 +1,5 @@
 // @ts-nocheck
 import type { NextApiRequest, NextApiResponse } from 'next'
-import fs from "fs"
 import { IMG_URL, NGROK_URL } from '@/constants';
 
 type ResponseData = {
@@ -11,10 +10,10 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseData>
 ) {
- // Return an HTML response
- res.setHeader('Content-Type', 'text/html');
+  // Return an HTML response
+  res.setHeader('Content-Type', 'text/html');
 
- res.status(200).send(`
+  res.status(200).send(`
 <!DOCTYPE html>
 <html>
 <head>
