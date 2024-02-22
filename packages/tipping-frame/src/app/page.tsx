@@ -1,11 +1,5 @@
 'use client';
 
-import Image from "next/image";
-import styles from "./page.module.css";
-
-import { connect } from "get-starknet";
-
-
 export default function Home() {
   return (
     <>
