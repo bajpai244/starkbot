@@ -1,9 +1,8 @@
 // @ts-nocheck
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { NGROK_URL, IMG_URL } from '@/constants';
 
 import { NeynarAPIClient } from "@neynar/nodejs-sdk";
-import { deposit } from '../../../utils/deposit';
+import { HTTPS_URL, IMG_URL } from '../../../utils/constants';
 import { tip } from '../../../utils/tip';
 
 type ResponseData = {
@@ -67,7 +66,7 @@ const payment_success = `<!DOCTYPE html>
 <meta property="og:title" content="Vote Recorded">
 <meta name="fc:frame" content="vNext">
 <meta name="fc:frame:image" content="${IMG_URL}">
-<meta name="fc:frame:post_url" content="${NGROK_URL}/api/main">
+<meta name="fc:frame:post_url" content="${HTTPS_URL}/api/main">
 <meta property="fc:frame:button:1" content="Payment is successful!" />
 <meta property="fc:frame:button:2" content="back to home" />
 </head>

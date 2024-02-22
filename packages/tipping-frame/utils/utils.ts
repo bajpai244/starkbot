@@ -1,6 +1,6 @@
 import { Account, Contract, RpcProvider } from "starknet";
 import fs from "fs";
-import { CONTRACT_BUILD_PATH, TIP_ADDRESS } from './constants'
+import { CONTRACT_BUILD_PATH, TIP_CONTRACT_ADDRESS } from './constants'
 import path from "path";
 
 export const getOwnerAccount = (provider: RpcProvider) => {
@@ -21,7 +21,7 @@ export const getSenderAccount = (provider: RpcProvider) => {
 
 export const getContract = (account: Account) => {
     const sierra = getSierra();
-    const contract = new Contract(sierra.abi, TIP_ADDRESS, account);
+    const contract = new Contract(sierra.abi, TIP_CONTRACT_ADDRESS, account);
     return contract;
 }
 

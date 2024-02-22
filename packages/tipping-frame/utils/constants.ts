@@ -1,6 +1,27 @@
-export const TIP_CLASS_HASH = "0x155605fd9474736cec781524ed144b3c354aa29384d7ece595f1a55c2f4bceb"
-export const TIP_ADDRESS = "0x1b4a2420aa1fecc9025d8ab13ca32d337339c45b7d7fbb3e2497e46a5c49868"
-export const ETH_ADDRESS = "0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7";
+if (process.env.HTTPS_URL === undefined) {
+    throw new Error("HTTPS_URL is not set in the environment");
+}
+export const HTTPS_URL = process.env.HTTPS_URL;
+
+if (process.env.TIP_CLASS_HASH === undefined) {
+    throw new Error("TIP_CLASS_HASH is not set in the environment");
+}
+export const TIP_CLASS_HASH = process.env.TIP_CLASS_HASH;
+
+if (process.env.TIP_CONTRACT_ADDRESS === undefined) {
+    throw new Error("TIP_CONTRACT_ADDRESS is not set in the environment");
+}
+export const TIP_CONTRACT_ADDRESS = process.env.TIP_CONTRACT_ADDRESS;
+
+if (process.env.ETH_CONTRACT_ADDRESS === undefined) {
+    throw new Error("ETH_CONTRACT_ADDRESS is not set in the environment");
+}
+export const ETH_CONTRACT_ADDRESS = process.env.ETH_CONTRACT_ADDRESS;
+
+if (process.env.USDC_CONTRACT_ADDRESS === undefined) {
+    throw new Error("USDC_CONTRACT_ADDRESS is not set in the environment");
+}
+export const USDC_CONTRACT_ADDRESS = process.env.USDC_CONTRACT_ADDRESS;
 
 if (process.env.NEYNAR_API_KEY === undefined) {
     throw new Error("NEYNAR_API_KEY is not set in the environment");
@@ -36,3 +57,5 @@ if (process.env.CONTRACT_BUILD_PATH === undefined) {
     throw new Error("CONTRACT_BUILD_PATH is not set in the environment");
 }
 export const CONTRACT_BUILD_PATH = process.env.CONTRACT_BUILD_PATH;
+
+export const IMG_URL = `https://pbs.twimg.com/profile_banners/1580859458334375936/1684245497/1500x500`

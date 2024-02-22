@@ -1,6 +1,6 @@
 // @ts-nocheck
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { IMG_URL, NGROK_URL } from '@/constants';
+import { IMG_URL, HTTPS_URL } from '../../../utils/constants';
 
 type ResponseData = {
   message: string
@@ -22,7 +22,7 @@ export default async function handler(
 <meta name="fc:frame" content="vNext">
 <meta name="og:image" content="${IMG_URL}">
 <meta name="fc:frame:image" content="${IMG_URL}">
-<meta name="fc:frame:post_url" content="${NGROK_URL}/api/handle_payload">
+<meta name="fc:frame:post_url" content="${HTTPS_URL}/api/handle_payload">
 <meta property="fc:frame:button:1" content="Deposit" />
 <meta property="fc:frame:button:2" content="Tip" />
 <meta property="fc:frame:button:3" content="Balance" />
